@@ -1,11 +1,10 @@
+import ProductDetails from "../ProductDetail/ProductDetail";
 import "./App.scss";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <p>Initial Setup</p>
-      </header>
+      <ProductDetails />
     </div>
   );
 }
