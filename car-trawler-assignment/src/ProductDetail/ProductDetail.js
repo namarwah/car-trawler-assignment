@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Modal from "react-modal";
 
 import "./ProductDetail.scss";
 import supplierBolt from "../images/supplier-bolt.svg";
@@ -9,11 +10,17 @@ import vehicleMini from "../images/vehicle-standard-minibus.svg";
 import vehicleSedan from "../images/vehicle-standard-sedan.svg";
 import vehicleSuv from "../images/vehicle-standard-suv.svg";
 
+Modal.setAppElement("#root");
+
 const ProductDetails = (props) => {
   const url =
     "https://raw.githubusercontent.com/cartrawler/mobility-react-native-assessment/master/assets/availability.json";
-  const [productDetails, setProductDetails] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+
+  const [productDetails, setProductDetails] = useState([]); // To store the data from API in state
+  const [isLoading, setIsLoading] = useState(true); // To check if data has been fetched or not
+  const [modalIsOpen, setIsOpen] = React.useState(false); // To open and close modal
+  const [modalData, setModalData] = React.useState({}); // To show specific product data inside the modal
+
   let content = <p>Loading Product Details...</p>;
 
   // Initial API call to fetch the data from the server
@@ -77,9 +84,29 @@ const ProductDetails = (props) => {
     setProductDetails([...productDetails]);
   };
 
+  // To open the modal and show specific product data
+  const openModal = (productId) => {
+    setIsOpen(true);
+    let specificProduct = productDetails.filter((product) => {
+      return product.availabilityId === productId;
+    })[0];
+    console.log(productId, specificProduct);
+    setModalData({ ...specificProduct });
+  };
+
+  // To close the modal
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
+  // Condition to verify if the data has been fetched and display appropiate content
   if (!isLoading && productDetails && productDetails.length > 0) {
     content = productDetails.map((product) => (
-      <div className="product-card" key={product.availabilityId}>
+      <div
+        className="product-card"
+        key={product.availabilityId}
+        onClick={() => openModal(product.availabilityId)}
+      >
         <div className="product-img">
           <img
             src={
@@ -142,6 +169,58 @@ const ProductDetails = (props) => {
         </select>
       </div>
       <div className="product-container">{content}</div>
+      {modalIsOpen ? (
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          className="modal"
+          overlayClassName="overlay-modal"
+        >
+          <div className="modal-close-icon">
+            <button onClick={closeModal}> X </button>
+          </div>
+          <div className="modal-content">
+            <div className="modal-img-container">
+              <img
+                className="modal-supplier-logo"
+                src={
+                  modalData.supplier.supplierKey === "bolt"
+                    ? supplierBolt
+                    : supplierFreenow
+                }
+                alt={modalData.supplier.supplierName}
+              ></img>
+            </div>
+            <div className="modal-label">ETA - {modalData.eta}</div>
+            <div className="modal-label">
+              Supplier - {modalData.supplier.supplierName}
+            </div>
+            <div className="modal-label">
+              Price -{modalData.price.amount} {modalData.price.currency}
+            </div>
+            <div className="modal-label">
+              Category - {modalData.category.vehicleType}
+            </div>
+            <div className="modal-img-container">
+              <img
+                className="modal-vehicle-logo"
+                src={
+                  modalData.category.vehicleType === "ACCESSIBLE"
+                    ? vehicleAccessible
+                    : modalData.category.vehicleType === "SEDAN"
+                    ? vehicleSedan
+                    : modalData.category.vehicleType === "MINIBUS"
+                    ? vehicleMini
+                    : modalData.category.vehicleType === "ECO"
+                    ? vehicleEco
+                    : vehicleSuv
+                }
+                alt={modalData.category.vehicleType}
+              ></img>
+            </div>
+          </div>
+        </Modal>
+      ) : null}
     </>
   );
 };

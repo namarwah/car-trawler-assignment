@@ -1,3 +1,20 @@
+/* Styling for select dropdown to sort products through different criteria */
+.sort-criteria {
+  font-weight: bold;
+  font-size: 16px;
+  margin: 0 0 20px 20px;
+  display: flex;
+
+  @media only screen and (max-width: 640px) {
+    justify-content: center;
+  }
+
+  select {
+    margin-left: 10px;
+  }
+}
+
+/* Styling for product box to show different product details starts */
 .product-container {
   display: flex;
   justify-content: center;
@@ -18,6 +35,10 @@
     border-radius: 10px;
     width: 200px;
     box-shadow: 2px 2px 10px 2px #3a3a3a;
+
+    @media only screen and (max-width: 640px) {
+      margin: 0 0 20px 20px;
+    }
 
     .product-img {
       display: flex;
@@ -56,12 +77,71 @@
   }
 }
 
-.sort-criteria {
-  font-weight: bold;
-  font-size: 16px;
-  margin: 0 0 20px 20px;
+/* Styling for modal start. 
+The styling includes modal backdrop and modal content. */
 
-  select {
-    margin-left: 10px;
+.overlay-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  right: 40px;
+  bottom: 40px;
+  background-color: #fff;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+
+  .modal-close-icon {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+
+    button {
+      border: 2px solid black;
+      outline: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-weight: bold;
+      padding: 10px;
+      font-size: 30px;
+      cursor: pointer;
+    }
+  }
+
+  .modal-content {
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .modal-img-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .modal-supplier-logo,
+      .modal-vehicle-logo {
+        width: 100%;
+      }
+    }
+
+    .modal-label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 5px;
+    }
   }
 }
