@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
+
 import Modal from "react-modal";
 
 import "./ProductDetail.scss";
-import supplierBolt from "../images/supplier-bolt.svg";
-import supplierFreenow from "../images/supplier-freenow.svg";
-import vehicleAccessible from "../images/vehicle-other-accessible.svg";
-import vehicleEco from "../images/vehicle-other-eco.svg";
-import vehicleMini from "../images/vehicle-standard-minibus.svg";
-import vehicleSedan from "../images/vehicle-standard-sedan.svg";
-import vehicleSuv from "../images/vehicle-standard-suv.svg";
+import supplierBolt from "../assets/images/supplier-bolt.svg";
+import supplierFreenow from "../assets/images/supplier-freenow.svg";
+import vehicleAccessible from "../assets/images/vehicle-other-accessible.svg";
+import vehicleEco from "../assets/images/vehicle-other-eco.svg";
+import vehicleMini from "../assets/images/vehicle-standard-minibus.svg";
+import vehicleSedan from "../assets/images/vehicle-standard-sedan.svg";
+import vehicleSuv from "../assets/images/vehicle-standard-suv.svg";
 
 Modal.setAppElement("#root");
 
@@ -101,61 +102,65 @@ const ProductDetails = (props) => {
 
   // Condition to verify if the data has been fetched and display appropiate content
   if (!isLoading && productDetails && productDetails.length > 0) {
-    content = productDetails.map((product) => (
-      <div
-        className="product-card"
-        key={product.availabilityId}
-        onClick={() => openModal(product.availabilityId)}
-      >
-        <div className="product-img">
-          <img
-            src={
-              product.supplier.supplierKey === "bolt"
-                ? supplierBolt
-                : supplierFreenow
-            }
-            alt={product.supplier.supplierName}
-          ></img>
-        </div>
-        <div className="product-content">
-          <div className="product-content-detail">
-            <span>ETA : </span>
-            <span>{product.eta} Minutes</span>
-          </div>
-          <div className="product-content-detail">
-            <span>Price : </span>
-            <span>
-              {product.price.amount} {product.price.currency}
-            </span>
-          </div>
-          <div className="product-content-detail">
-            <span>Supplier : </span>
-            <span>{product.supplier.supplierName}</span>
-          </div>
-          <div className="product-content-detail">
-            <span>Category : </span>
-            <span>{product.category.vehicleType}</span>
-          </div>
-          <div className="product-content-detail-img">
+    content = productDetails.map(
+      ({
+        supplier: { supplierName, supplierKey },
+        availabilityId,
+        eta,
+        price,
+        category: { vehicleType },
+      }) => (
+        <div
+          className="product-card"
+          key={availabilityId}
+          onClick={() => openModal(availabilityId)}
+        >
+          <div className="product-img">
             <img
-              className="product-category-img"
-              src={
-                product.category.vehicleType === "ACCESSIBLE"
-                  ? vehicleAccessible
-                  : product.category.vehicleType === "SEDAN"
-                  ? vehicleSedan
-                  : product.category.vehicleType === "MINIBUS"
-                  ? vehicleMini
-                  : product.category.vehicleType === "ECO"
-                  ? vehicleEco
-                  : vehicleSuv
-              }
-              alt={product.category.vehicleType}
+              src={supplierKey === "bolt" ? supplierBolt : supplierFreenow}
+              alt={supplierName}
             ></img>
           </div>
+          <div className="product-content">
+            <div className="product-content-detail">
+              <span>ETA : </span>
+              <span>{eta} Minutes</span>
+            </div>
+            <div className="product-content-detail">
+              <span>Price : </span>
+              <span>
+                {price.amount} {price.currency}
+              </span>
+            </div>
+            <div className="product-content-detail">
+              <span>Supplier : </span>
+              <span>{supplierName}</span>
+            </div>
+            <div className="product-content-detail">
+              <span>Category : </span>
+              <span>{vehicleType}</span>
+            </div>
+            <div className="product-content-detail-img">
+              <img
+                className="product-category-img"
+                src={
+                  vehicleType === "ACCESSIBLE"
+                    ? vehicleAccessible
+                    : vehicleType === "SEDAN"
+                    ? vehicleSedan
+                    : vehicleType === "MINIBUS"
+                    ? vehicleMini
+                    : vehicleType === "ECO"
+                    ? vehicleEco
+                    : vehicleSuv
+                }
+                alt={vehicleType}
+              ></img>
+            </div>
+          </div>
         </div>
-      </div>
-    ));
+      )
+    );
   }
   return (
     <>
